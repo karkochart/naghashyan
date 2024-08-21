@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests\Admin;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 class UpdateCategoryRequest extends StoreCategoryRequest
 {
     public function rules(): array

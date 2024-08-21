@@ -7,6 +7,10 @@ defineProps({
     product: {
         type: Object,
     },
+    categories: {
+        type: Object,
+        required: true,
+    },
 });
 </script>
 
@@ -23,6 +27,7 @@ defineProps({
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                     <EditProductForm
                         :product="product"
+                        :categories="categories"
                         class="max-w-xl"
                     />
                 </div>

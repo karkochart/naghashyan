@@ -1,20 +1,21 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import AddProductForm from './Partials/AddProductForm.vue';
 import {Head} from '@inertiajs/vue3';
+import Actions from "@/Components/Actions.vue";
+import Search from "@/Components/Search.vue";
 
 defineProps({
     products: {
         type: Object,
+        required: true,
+    },
+    search: {
+        type: String,
     }
 });
 
-const remove = function (id) {
-    axios.delete('/products', {data: {id: id}},)
-        .then(res => {
+const baseUrl = '/products';
 
-    });
-}
 </script>
 
 <template>
@@ -29,15 +30,28 @@ const remove = function (id) {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <div class="w-full flex justify-between items-center mb-3 mt-1 pl-3">
+                            <div class="ml-3">
+                                <div class="w-full max-w-sm min-w-[200px] relative">
+                                    <Search
+                                        :url="baseUrl"
+                                        :search="search"
+                                    ></Search>
+                                </div>
+                            </div>
+                        </div>
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <thead
                                 class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
-                                    Product name
+                                    ID
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Color
+                                    Name
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Description
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Category
@@ -46,12 +60,12 @@ const remove = function (id) {
                                     Price
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Action
+                                    Actions
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="product in products"
+                            <tr v-for="product in products.data"
                                 class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                 <td class="px-6 py-4">
                                     {{ product.id }}
@@ -64,19 +78,18 @@ const remove = function (id) {
                                     {{ product.description }}
                                 </td>
                                 <td class="px-6 py-4">
+                                    {{ product.category.name }}
+                                </td>
+                                <td class="px-6 py-4">
                                     {{ product.price }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    <a :href="'/products/edit/' + product.id"
-                                       class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                    <a @click.prevent="remove(product.id)"
-                                       class="font-medium text-blue-600 dark:text-blue-500 hover:underline red">Delete</a>
+                                    <Actions :id="product.id" :url="baseUrl"/>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
-
 
                 </div>
             </div>

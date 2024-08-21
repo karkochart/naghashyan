@@ -16,17 +16,25 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $products = (new Product())->newQuery();
+        if ($search = request()->input('search')) {
+            $products->where('name', 'Like', '%' . $search . '%');
+        } else {
+            $products->latest();
+        }
+        $products = $products->with('category')->paginate(config('admin.paginate.per_page'))
+            ->onEachSide(config('admin.paginate.each_side'))
+            ->appends(request()->query());
+
         return inertia("Admin/Product/Index", compact("products"));
     }
 
     public function edit(int $id)
     {
-        if (!($product = Product::where('id', $id)->get()->first())) {
-            return abort(404);
-        }
+        $product = Product::where('id', $id)->get()->first();
+        $categories = Category::all();
 
-        return inertia("Admin/Product/Edit", compact("product"));
+        return inertia("Admin/Product/Edit", compact("product", "categories"));
     }
 
     public function add()
@@ -46,21 +54,15 @@ class ProductController extends Controller
 
     public function update(UpdateProductRequest $request): RedirectResponse
     {
-
-        if (!($product = Product::where('id', $request->get('id'))->get()->first())) {
-            return abort(404);
-        }
+        $product = Product::where('id', $request->get('id'))->get()->first();
         $product->fill($request->validated())->save();
 
-        return Redirect::route('products.edit');
+        return Redirect::route('products.index');
     }
 
     public function destroy(DeleteProductRequest $request)
     {
-        if (!($product = Product::where('id', $request->get('id'))->get()->first())) {
-            return abort(404);
-        }
-
+        $product = Product::where('id', $request->get('id'))->get()->first();
         $product->delete();
 
         return ProductResource::make($product)->resolve();

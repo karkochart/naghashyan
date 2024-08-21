@@ -6,6 +6,7 @@ import { Head } from '@inertiajs/vue3';
 defineProps({
     categories: {
         type: Object,
+        required: true,
     }
 });
 </script>

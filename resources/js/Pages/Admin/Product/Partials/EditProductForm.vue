@@ -8,7 +8,12 @@ import {Link, useForm, usePage} from '@inertiajs/vue3';
 const props = defineProps({
     product: {
         type: Object,
+        required: true,
     },
+    categories: {
+        type: Object,
+        required: true,
+    }
 });
 
 const form = useForm({
@@ -16,7 +21,8 @@ const form = useForm({
     name: props.product.name,
     description: props.product.description,
     price: props.product.price,
-    images: props.product.images,
+    photos: props.product.photos,
+    category_id: props.product.category_id,
 });
 
 
@@ -76,10 +82,19 @@ const form = useForm({
                 <InputError class="mt-2" :message="form.errors.price"/>
             </div>
             <div>
-                <InputLabel for="description" value="Images"/>
-                <input type="file" @input="form.images = $event.target.files[0]" multiple/>
+                <InputLabel for="description" value="photos"/>
+                <input type="file" @input="form.photos = $event.target.files[0]" multiple/>
 
-                <InputError class="mt-2" :message="form.errors.images"/>
+                <InputError class="mt-2" :message="form.errors.photos"/>
+            </div>
+            <div>
+                <InputLabel for="category_id" value="Category"/>
+                <select v-model="form.category_id"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 EditProductFormbg-gray-700 EditProductFormborder-gray-600 EditProductFormplaceholder-gray-400 EditProductFormtext-white EditProductFormfocus:ring-blue-500 EditProductFormfocus:border-blue-500">
+                    <option v-for="category in categories" :value="category.id">{{ category.name }}</option>
+                </select>
+
+                <InputError class="mt-2" :message="form.errors.category_id"/>
             </div>
 
             <div class="flex items-center gap-4">

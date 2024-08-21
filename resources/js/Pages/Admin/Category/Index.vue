@@ -1,20 +1,19 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import AddCategoryForm from './Partials/AddCategoryForm.vue';
-import {Head} from '@inertiajs/vue3';
+import Pagination from "@/Components/Pagination.vue";
+import Search from "@/Components/Search.vue";
+import Actions from "@/Components/Actions.vue";
 
 defineProps({
     categories: {
         type: Object,
+    },
+    search: {
+        type: String,
     }
 });
 
-const remove = function (id) {
-    axios.delete('/categories', {data: {id: id}},)
-        .catch(err => {
-            alert(err);
-        });
-}
+const baseUrl = '/categories';
 
 </script>
 
@@ -25,17 +24,31 @@ const remove = function (id) {
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Products</h2>
         </template>
-
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+
+                        <div class="w-full flex justify-between items-center mb-3 mt-1 pl-3">
+                            <div class="ml-3">
+                                <div class="w-full max-w-sm min-w-[200px] relative">
+                                    <Search
+                                        :url="baseUrl"
+                                        :search="search"
+                                    ></Search>
+                                </div>
+                            </div>
+                        </div>
+
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <thead
                                 class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                <th scope="col" class="px-6 py-3">
+                                <th scope="col" class="px-6 py-3 active-sort" @click="">
                                     Id
+                                    <div class="rotate-90 inline-block"><</div>
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Name
@@ -46,7 +59,7 @@ const remove = function (id) {
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="category in categories"
+                            <tr v-for="category in categories.data"
                                 class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                 <td class="px-6 py-4">
                                     {{ category.id }}
@@ -56,16 +69,15 @@ const remove = function (id) {
                                     {{ category.name }}
                                 </th>
                                 <td class="px-6 py-4">
-                                    <a :href="'/categories/edit/' + category.id"
-                                       class=" font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                    <a @click.prevent="remove(category.id)"
-                                       class="font-medium text-blue-600 dark:text-blue-500 hover:underline red">Delete</a>
+                                    <Actions :id="category.id" :url="baseUrl"/>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
-
+                    <div class="py-4">
+                        <Pagination :data="categories"/>
+                    </div>
 
                 </div>
             </div>
