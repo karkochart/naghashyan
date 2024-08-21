@@ -11,7 +11,7 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Category"/>
+    <Head title="Category edit"/>
 
     <AuthenticatedLayout>
         <template #header>

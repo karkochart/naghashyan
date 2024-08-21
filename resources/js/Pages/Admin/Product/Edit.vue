@@ -15,7 +15,7 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Profile" />
+    <Head title="Product edit" />
 
     <AuthenticatedLayout>
         <template #header>
