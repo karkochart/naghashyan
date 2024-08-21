@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\DeleteCategoryRequest;
 use App\Http\Requests\Admin\StoreCategoryRequest;
-use App\Http\Requests\Admin\UpdateProductRequest;
+use App\Http\Requests\Admin\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 
@@ -16,8 +15,17 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
-        return inertia("Admin/Category/Index", compact("categories"));
+        $categories = (new Category())->newQuery();
+        if ($search = request()->input('search')) {
+            $categories->where('name', 'Like', '%' . $search . '%');
+        } else {
+            $categories->latest();
+        }
+        $categories = $categories->paginate(config('admin.paginate.per_page'))
+            ->onEachSide(config('admin.paginate.each_side'))
+            ->appends(request()->query());
+
+        return inertia("Admin/Category/Index", compact("categories", "search"));
     }
 
     public function add()
@@ -28,9 +36,7 @@ class CategoryController extends Controller
 
     public function edit(int $id)
     {
-        if (!($category = Category::where('id', $id)->get()->first())) {
-            return abort(404);
-        }
+        $category = Category::where('id', $id)->get()->first();
 
         return inertia("Admin/Category/Edit", compact("category"));
     }
@@ -42,21 +48,18 @@ class CategoryController extends Controller
         return Redirect::route('categories.index');
     }
 
-    public function update(UpdateProductRequest $request): RedirectResponse
+    public function update(UpdateCategoryRequest $request)
     {
-        if (!($category = Category::where('id', $request->get('id'))->get()->first())) {
-            return abort(404);
-        }
+        $category = Category::where('id', $request->get('id'))->get()->first();
+
         $category->fill($request->validated())->save();
 
-        return Redirect::route('categories.edit');
+        return Redirect::route('categories.index');
     }
 
     public function destroy(DeleteCategoryRequest $request)
     {
-        if (!($category = Category::where('id', $request->get('id'))->get()->first())) {
-            return abort(404);
-        }
+        $category = Category::where('id', $request->get('id'))->get()->first();
 
         $category->delete();
 
