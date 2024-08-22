@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\PhotoController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\IsAdmin;
@@ -47,6 +48,8 @@ Route::middleware(['auth', IsAdmin::class])->group(function () {
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::patch('/categories', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+    Route::delete('/photos', [PhotoController::class, 'destroy'])->name('photos.destroy');
 });
 
 require __DIR__ . '/auth.php';

@@ -17,7 +17,7 @@ const form = useForm({
     description: '',
     price: null,
     category_id: null,
-    images: [],
+    photos: [],
 });
 </script>
 
@@ -59,24 +59,11 @@ const form = useForm({
 
                 <InputError class="mt-2" :message="form.errors.description"/>
             </div>
-
-            <!--            <div>-->
-            <!--                <InputLabel for="description" value="Images"/>-->
-
-            <!--                <div class="mt-3">-->
-            <!--                    <input id="gallery-uploader"-->
-            <!--                           class="border-solid border-2 border-gray-300 rounded-md p-1.5"-->
-            <!--                           name="gallery" type="file" accept="image/png,image/gif,image/jpeg"-->
-            <!--                           multiple>-->
-            <!--                </div>-->
-
-            <!--                <InputError class="mt-2" :message="form.errors.images"/>-->
-            <!--            </div>-->
             <div>
                 <InputLabel for="description" value="Images"/>
-                <input type="file" @input="form.images = $event.target.files[0]" multiple/>
+                <input type="file" @input="form.photos = $event.target.files" multiple/>
 
-                <InputError class="mt-2" :message="form.errors.images"/>
+                <InputError class="mt-2" :message="form.errors.photos"/>
             </div>
 
             <div>

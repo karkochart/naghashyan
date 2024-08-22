@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Observers\PhotoObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy([PhotoObserver::class])]
 class Photo extends Model
 {
     use HasFactory;
@@ -13,6 +16,7 @@ class Photo extends Model
 
     protected $fillable = [
         'product_id',
+        'path',
     ];
 
 

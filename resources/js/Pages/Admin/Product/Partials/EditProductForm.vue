@@ -3,7 +3,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import {Link, useForm, usePage} from '@inertiajs/vue3';
+import {Link, router, useForm, usePage} from '@inertiajs/vue3';
 
 const props = defineProps({
     product: {
@@ -24,7 +24,16 @@ const form = useForm({
     photos: props.product.photos,
     category_id: props.product.category_id,
 });
-
+const removePhoto = function (id) {
+    document.getElementById('photo-' + id).remove();
+    axios.delete('/photos', {data: {id: id}},)
+        .then(res => {
+            // router.get(photos)
+        })
+        .catch(err => {
+            alert(err.message);
+        });
+}
 
 </script>
 
@@ -82,6 +91,18 @@ const form = useForm({
                 <InputError class="mt-2" :message="form.errors.price"/>
             </div>
             <div>
+                <div class="grid grid-cols-2 md:grid-cols-2 gap-3">
+                    <div v-for="photo in form.photos" class="relative" :id="'photo-' + photo.id">
+                        <img class="h-auto max-w-full rounded-lg"
+                             :src="'/storage/uploads/' + photo.path" :alt="photo.path">
+                        <button type="button"
+                                @click="removePhoto(photo.id)"
+                                class="absolute top-0 text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+                            X
+                        </button>
+                    </div>
+                </div>
+
                 <InputLabel for="description" value="photos"/>
                 <input type="file" @input="form.photos = $event.target.files[0]" multiple/>
 

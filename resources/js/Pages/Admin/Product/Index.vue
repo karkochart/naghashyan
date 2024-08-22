@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import {Head, router} from '@inertiajs/vue3';
 import Actions from "@/Components/Actions.vue";
 import Search from "@/Components/Search.vue";
+import Pagination from "@/Components/Pagination.vue";
 
 defineProps({
     products: {
@@ -99,7 +100,9 @@ const baseUrl = '/products';
                             </tbody>
                         </table>
                     </div>
-
+                    <div class="py-4">
+                        <Pagination :data="products"/>
+                    </div>
                 </div>
             </div>
         </div>
