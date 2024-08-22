@@ -1,5 +1,9 @@
+```
 npm --version -> 10.8.2
+```
+```
 php --version -> 8.1
+```
 
 configure .env file
 - `php artisan key:generate`
